@@ -1,23 +1,29 @@
-import type { ElementType, HTMLAttributes, ReactNode } from 'react';
+import type {
+  ElementType,
+  HTMLAttributes,
+  PropsWithChildren,
+} from 'react';
 
-type RevealProps = HTMLAttributes<HTMLElement> & {
-  delay?: 1 | 2 | 3 | 4 | 5 | 6;
-  as?: ElementType;
-  children?: ReactNode;
-};
+type RevealProps<T extends ElementType = 'div'> = PropsWithChildren<
+  HTMLAttributes<HTMLElement> & {
+    delay?: 1 | 2 | 3 | 4 | 5 | 6;
+    as?: T;
+  }
+>;
 
 /**
  * Wraps content with a `.reveal` class. When combined with `useReveal()` in a
  * parent component, the element animates in once scrolled into view.
  */
-export function Reveal({
+export function Reveal<T extends ElementType = 'div'>({
   children,
   delay,
   className = '',
-  as: Tag = 'div',
+  as,
   ...rest
-}: RevealProps) {
-  const Component = Tag as ElementType;
+}: RevealProps<T>) {
+  const Component = (as || 'div') as ElementType;
+
   return (
     <Component
       className={`reveal ${className}`.trim()}
