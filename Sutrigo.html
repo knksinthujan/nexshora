@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sutrigo — Premium tourism, parks & organic goods</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="src/styles/tokens.css" />
+<link rel="stylesheet" href="src/styles/app.css" />
+<link rel="stylesheet" href="src/styles/pages.css" />
+
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react-dom": "https://esm.sh/react-dom@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+    "@emotion/react": "https://esm.sh/@emotion/react@11.13.3?deps=react@18.3.1",
+    "@emotion/react/jsx-runtime": "https://esm.sh/@emotion/react@11.13.3/jsx-runtime?deps=react@18.3.1",
+    "@emotion/styled": "https://esm.sh/@emotion/styled@11.13.0?deps=react@18.3.1,@emotion/react@11.13.3",
+    "@mui/material": "https://esm.sh/@mui/material@6.1.7?deps=react@18.3.1,react-dom@18.3.1,@emotion/react@11.13.3,@emotion/styled@11.13.0",
+    "@mui/material/styles": "https://esm.sh/@mui/material@6.1.7/styles?deps=react@18.3.1,react-dom@18.3.1,@emotion/react@11.13.3,@emotion/styled@11.13.0",
+    "@mui/material/CssBaseline": "https://esm.sh/@mui/material@6.1.7/CssBaseline?deps=react@18.3.1,react-dom@18.3.1,@emotion/react@11.13.3,@emotion/styled@11.13.0"
+  }
+}
+</script>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- Babel for in-browser TypeScript + JSX transpilation (preview only).
+     In production this codebase runs via Vite: `npm install && npm run dev`. -->
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="module">
+/* =========================================================
+   In-browser TypeScript loader (preview-only)
+   Fetches .ts/.tsx files, rewrites imports to blob URLs,
+   transpiles with Babel, and chains them into ES modules.
+   Bare imports (react, react/jsx-runtime) resolve via the
+   importmap above.
+   ========================================================= */
+
+const moduleCache = new Map();
+const loadedCss = new Set();
+const SRC_BASE = new URL('./src/', location.href);
+
+const EXTERNAL_BARE = (s) =>
+  !s.startsWith('.') && !s.startsWith('/') && !s.startsWith('@/');
+
+async function existsAt(url) {
+  try {
+    const r = await fetch(url, { method: 'HEAD' });
+    return r.ok;
+  } catch { return false; }
+}
+
+async function resolveLocalUrl(rawUrl) {
+  // If it already has an extension or trailing slash that points at a file, try it directly.
+  if (/\.(tsx?|jsx?|css)$/.test(rawUrl) || /\/[^./]+\.[a-z]+$/i.test(rawUrl)) {
+    return rawUrl;
+  }
+  for (const ext of ['.tsx', '.ts', '/index.tsx', '/index.ts', '.jsx', '.js']) {
+    const candidate = rawUrl + ext;
+    if (await existsAt(candidate)) return candidate;
+  }
+  throw new Error('Cannot resolve module: ' + rawUrl);
+}
+
+async function resolveImport(specifier, baseUrl) {
+  // Bare specifiers (react, etc.) → let the browser/importmap handle it
+  if (EXTERNAL_BARE(specifier)) return specifier;
+
+  // Alias @/ → /src/
+  let rawUrl;
+  if (specifier.startsWith('@/')) {
+    rawUrl = new URL(specifier.slice(2), SRC_BASE).href;
+  } else {
+    rawUrl = new URL(specifier, baseUrl).href;
+  }
+
+  // CSS — inject as a <link> and return a no-op module
+  if (rawUrl.endsWith('.css')) {
+    if (!loadedCss.has(rawUrl)) {
+      loadedCss.add(rawUrl);
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = rawUrl;
+      document.head.appendChild(link);
+    }
+    return URL.createObjectURL(new Blob(['export {};'], { type: 'application/javascript' }));
+  }
+
+  const resolved = await resolveLocalUrl(rawUrl);
+  return await loadModule(resolved);
+}
+
+const IMPORT_RE =
+  /((?:^|[^.\w$])(?:import\s+(?:[^'";]+\s+from\s+)?|export\s+(?:[^'";]+\s+from\s+)|import\s*\(\s*))(['"])([^'"]+)\2/g;
+
+async function loadModule(url) {
+  if (moduleCache.has(url)) return moduleCache.get(url);
+
+  const promise = (async () => {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`Failed to fetch ${url}: ${resp.status}`);
+    let src = await resp.text();
+
+    // Collect all import specifiers, resolve them in parallel,
+    // then string-replace right-to-left.
+    const matches = [];
+    let m;
+    IMPORT_RE.lastIndex = 0;
+    while ((m = IMPORT_RE.exec(src)) !== null) {
+      matches.push({
+        full: m[0],
+        prefix: m[1],
+        quote: m[2],
+        spec: m[3],
+        start: m.index + m[1].length,
+        end: m.index + m[0].length,
+      });
+    }
+
+    const resolutions = await Promise.all(
+      matches.map((x) => resolveImport(x.spec, url))
+    );
+    for (let i = matches.length - 1; i >= 0; i--) {
+      const x = matches[i];
+      const newSpec = `${x.quote}${resolutions[i]}${x.quote}`;
+      src = src.slice(0, x.start) + newSpec + src.slice(x.end);
+    }
+
+    const { code } = Babel.transform(src, {
+      filename: url,
+      presets: [
+        ['react', { runtime: 'automatic' }],
+        'typescript',
+      ],
+    });
+
+    const blob = new Blob([code], { type: 'application/javascript' });
+    return URL.createObjectURL(blob);
+  })();
+
+  moduleCache.set(url, promise);
+  return promise;
+}
+
+/* ---------- Boot ---------- */
+(async () => {
+  // tweaks-panel.jsx is a starter that hangs components on `window`.
+  // It references the React global, so we ship one for it, then run it.
+  const React = await import('react');
+  window.React = React;
+  const tweaksSrc = await fetch('tweaks-panel.jsx').then((r) => r.text());
+  const { code: tweaksCode } = Babel.transform(tweaksSrc, {
+    presets: [['react', { runtime: 'classic' }]],
+    filename: 'tweaks-panel.jsx',
+  });
+  new Function(tweaksCode)();
+
+  // Boot the TS app.
+  const entry = await loadModule(new URL('./src/main.tsx', location.href).href);
+  await import(entry);
+})().catch((err) => {
+  console.error('[Sutrigo loader]', err);
+  const root = document.getElementById('root');
+  if (root) {
+    root.innerHTML =
+      '<div style="padding:48px;font-family:system-ui;color:#D7263D">' +
+      '<h2>Loader error</h2><pre>' + String(err).replace(/[<>&]/g, (c) => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) +
+      '</pre></div>';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+/* ============================================================
+   SUTRIGO — Design Tokens
+   Resort / tropical premium aesthetic
+   ============================================================ */
+
+:root {
+  /* Brand palette — defaults; overridable via tweaks */
+  --brand-sunset: #FF7B54;
+  --brand-coral: #FF9F76;
+  --brand-gold: #D4AF37;
+  --brand-ocean: #0A4D68;
+  --brand-teal: #05BFDB;
+  --brand-leaf: #4CAF50;
+
+  /* Semantic — light mode */
+  --bg: #FAF6EF;
+  --bg-elev: #FFFFFF;
+  --bg-sunken: #F2EDE3;
+  --surface-glass: rgba(255, 255, 255, 0.72);
+  --surface-glass-border: rgba(255, 255, 255, 0.6);
+  --ink: #1A1410;
+  --ink-2: #4A423B;
+  --ink-3: #80766B;
+  --ink-mute: #B8AFA3;
+  --line: rgba(26, 20, 16, 0.08);
+  --line-2: rgba(26, 20, 16, 0.14);
+
+  --primary: var(--brand-sunset);
+  --primary-ink: #FFFFFF;
+  --accent: var(--brand-gold);
+  --secondary: var(--brand-ocean);
+  --success: var(--brand-leaf);
+  --warn: #E0A800;
+  --danger: #D7263D;
+
+  /* Type */
+  --font-display:  "Nunito Sans", Inter, system-ui, sans-serif;
+  --font-friendly: "Nunito Sans", Inter, system-ui, sans-serif;
+  --font-body:     "Nunito Sans", Inter, system-ui, sans-serif;
+  --font-mono:     "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Scale */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-2xl: 36px;
+  --r-pill: 999px;
+
+  /* Shadows — warm-tinted */
+  --sh-1: 0 1px 2px rgba(26, 20, 16, 0.04), 0 1px 1px rgba(26, 20, 16, 0.03);
+  --sh-2: 0 4px 10px -2px rgba(26, 20, 16, 0.08), 0 2px 4px rgba(26, 20, 16, 0.04);
+  --sh-3: 0 16px 32px -12px rgba(26, 20, 16, 0.14), 0 6px 12px -4px rgba(26, 20, 16, 0.06);
+  --sh-4: 0 32px 60px -20px rgba(26, 20, 16, 0.22), 0 12px 24px -8px rgba(26, 20, 16, 0.08);
+  --sh-glow: 0 24px 48px -16px color-mix(in oklch, var(--primary), transparent 70%);
+
+  /* Sizing */
+  --nav-h: 76px;
+  --container: 1280px;
+
+  /* Transitions */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --t-fast: 160ms;
+  --t-base: 280ms;
+  --t-slow: 520ms;
+}
+
+[data-theme="dark"] {
+  --bg: #0E0B08;
+  --bg-elev: #181310;
+  --bg-sunken: #07060A;
+  --surface-glass: rgba(24, 19, 16, 0.66);
+  --surface-glass-border: rgba(255, 255, 255, 0.08);
+  --ink: #F6EFE4;
+  --ink-2: #C9BFB1;
+  --ink-3: #8A8174;
+  --ink-mute: #5C544A;
+  --line: rgba(246, 239, 228, 0.08);
+  --line-2: rgba(246, 239, 228, 0.14);
+
+  --sh-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --sh-2: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --sh-3: 0 18px 40px -12px rgba(0, 0, 0, 0.6);
+  --sh-4: 0 36px 70px -20px rgba(0, 0, 0, 0.7);
+}

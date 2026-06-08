@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 110" fill="none">
+  <!-- "Sutri" in dark navy -->
+  <text x="0" y="82"
+    font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+    font-weight="900"
+    font-size="78"
+    letter-spacing="-2"
+    fill="#1A3B7D">Sutri</text>
+
+  <!-- "Go" in teal -->
+  <text x="266" y="82"
+    font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+    font-weight="900"
+    font-size="78"
+    letter-spacing="-2"
+    fill="#00B5A4">Go</text>
+
+  <!-- Globe emblem overlapping the G — circle -->
+  <circle cx="304" cy="44" r="32" fill="#00B5A4" opacity="0.15"/>
+  <circle cx="304" cy="44" r="32" stroke="#00B5A4" stroke-width="1.5" fill="none"/>
+  <!-- Globe lines (latitude/longitude) -->
+  <ellipse cx="304" cy="44" rx="16" ry="32" stroke="#00B5A4" stroke-width="1.2" fill="none"/>
+  <line x1="272" y1="44" x2="336" y2="44" stroke="#00B5A4" stroke-width="1.2"/>
+  <line x1="275" y1="30" x2="333" y2="30" stroke="#00B5A4" stroke-width="1"/>
+  <line x1="275" y1="58" x2="333" y2="58" stroke="#00B5A4" stroke-width="1"/>
+  <!-- Minaret silhouette -->
+  <rect x="300" y="22" width="8" height="28" rx="4" fill="#00B5A4"/>
+  <polygon points="304,14 300,22 308,22" fill="#00B5A4"/>
+  <!-- Leaf -->
+  <path d="M290 56 Q296 46 304 50 Q296 60 290 56Z" fill="#00B5A4"/>
+
+  <!-- Location pin badge -->
+  <circle cx="450" cy="44" r="28" fill="#00B5A4"/>
+  <!-- Pin icon -->
+  <path d="M450 26c-8.3 0-15 6.7-15 15 0 11.3 15 25 15 25s15-13.7 15-25c0-8.3-6.7-15-15-15z"
+    fill="white"/>
+  <circle cx="450" cy="41" r="5" fill="#00B5A4"/>
+</svg>
